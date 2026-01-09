@@ -1,0 +1,41 @@
+import phonenumbers
+from phonenumbers import geocoder, carrier, timezone
+
+def start_phone_tracer(target):
+    print(f"-" * 40)
+    print(f"[+] PhoneTracer v2.2 - Metadata Extractor")
+    print(f"[*] Target: {target}")
+    print(f"[*] Initiating trace...")
+    print(f"-" * 40)
+
+    try:
+       
+        p = phonenumbers.parse(target, None)
+
+        if not phonenumbers.is_valid_number(p):
+            print(f"[!] Error: The number {target} seems invalid or does not exist.")
+            return
+
+        location = geocoder.description_for_number(p, 'en')
+        
+        service_provider = carrier.name_for_number(p, 'en')
+
+        time_zones = timezone.time_zones_for_number(p)
+
+        formatted_number = phonenumbers.format_number(p, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+
+        print(f"[+] Standard Format:  {formatted_number}")
+        print(f"[+] Location:         {location}")
+        print(f"[+] Carrier:          {service_provider}")
+        print(f"[+] Time Zones:       {', '.join(time_zones)}")
+        print(f"[+] Validation:       Number is Active/Valid")
+
+    except Exception as e:
+        print(f"[!] An error occurred: {e}")
+
+    print(f"-" * 40)
+    print(f"[+] Trace complete.")
+
+if __name__ == "__main__":
+
+    start_phone_tracer("+5551999999999")
